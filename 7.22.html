@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>打字游戏</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+   	body {
+		  background: radial-gradient(200% 100% at bottom center, #f7f7b6, #e96f92, #75517d, #1b2947);
+		  background: radial-gradient(220% 105% at top center, #1b2947 10%, #75517d 40%, #e96f92 65%, #f7f7b6);
+		  background-attachment: fixed;
+		  overflow: hidden;
+		}
+		@keyframes rotate {
+		  0% {
+		    transform: perspective(300px) rotateZ(20deg) rotateX(-40deg) rotateY(0);
+		  }
+		  100% {
+		    transform: perspective(300px) rotateZ(20deg) rotateX(-40deg) rotateY(-360deg);
+		  }
+		}
+
+        /* 星空背景图 */
+
+
+    .gamePage{
+        width: 100wh;
+        height: 100vh;
+        margin:0 auto;
+        position: relative;
+    }
+
+    .chengji{
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        top: 0px;
+        right: 100px;
+        display: flex;
+    }
+
+    .chengji > div{
+        width: 80px;
+        margin: 10px;
+        height: 80px;
+        background: gray;
+    }
+
+    .chengji div .title{
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-weight: 200;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .chengji div .records{
+        width: 100%;
+        height: 40px;
+        line-height:40px;
+        font-weight: 700;
+        font-size: 20px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .chengji div .lifes{
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 20px;
+        text-align: center;
+        color: #636FA4;
+    }
+    .deadline{
+        width: 100%;
+        height: 2px;
+        /* background: #ddd; */
+        position: absolute;
+        bottom: 220px;
+    }
+</style>
+<body>
+    <div class="gamePage">
+        <div class="chengji">
+            <div>
+                <div class="records">0</div>
+                <div class="title">分数</div>
+            </div>
+            <div> 
+                <div class="lifes">100</div>
+                <div class="title">生命值</div>
+            </div>
+        </div>
+        <div class="deadline"></div>
+    </div>
+</body>
+<script src="aniMath.js"></script>
+<script>
+    var gamePage = document.querySelector(".gamePage");
+    var deadline=document.querySelector(".deadline");
+    var words = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+    function createWord(num) {
+        for(let i = 0 ; i < num ; i++){
+            var word = document.createElement("span");
+            word.innerHTML = words[Math.ceil(Math.random()*25)];
+            word.style.cssText = `
+                position: absolute;
+                left: ${Math.ceil(Math.random()*1000)}px;
+                top:  ${Math.ceil(Math.random()*20)}px;
+                font-size:48px;
+                font-weight: bold;
+                display:block;
+                width:50px;
+                height:50px;
+                text-align:center;
+                line-height:50px;
+                color:#fff;
+                border-radius:50%;
+                transition: all .6s;
+                `;
+              
+            gamePage.appendChild(word);
+            
+        }
+    }
+
+    createWord(4)
+    var speed=100;
+    var t=setInterval(function (){
+        var spans = document.querySelectorAll(".gamePage span");
+     
+        for(let i = 0; i < spans.length ; i++){
+            var leng=spans[i].offsetTop
+            console.log(leng)
+            animate(spans[i],{"top":leng+speed},50000,Tween.Linear);
+            spans[i].style.top = leng+speed+"px";
+            if(spans[i].offsetTop > deadline.offsetTop){
+                var lifes = document.querySelector(".lifes");
+                var score=document.querySelector(".records");
+                lifes.innerHTML = parseInt(lifes.innerHTML)-1;
+                if(parseInt(lifes.innerHTML)<=0){
+                    alert("游戏结束！");
+                    clearInterval(t);
+                }
+                spans[i].style.opacity = 0;
+                gamePage.removeChild(spans[i]);
+                createWord(1);
+            }
+        }
+    },10);
+
+    document.onkeydown = function (ev) {
+        var code  = String.fromCharCode(ev.keyCode);;
+        var spans = document.querySelectorAll(".gamePage span");
+        for(let i = 0; i < spans.length ; i++){
+            if(spans[i].innerHTML == code){
+                gamePage.removeChild(spans[i]);
+                var records = document.querySelector(".records");
+                records.innerHTML = parseInt(records.innerHTML)+1;
+                createWord(1);
+            }
+        }
+    }
+
+
+</script>
+</html>
