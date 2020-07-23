@@ -141,7 +141,7 @@
         for(let i = 0; i < spans.length ; i++){
             var leng=spans[i].offsetTop
             console.log(leng)
-            animate(spans[i],{"top":leng+speed},50000,Tween.Linear);
+            // animate(spans[i],{"top":leng+speed},50000,Tween.Linear);
             spans[i].style.top = leng+speed+"px";
             if(spans[i].offsetTop > deadline.offsetTop){
                 var lifes = document.querySelector(".lifes");
